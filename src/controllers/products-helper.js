@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const util = require('util');
 const conn = require('../config/connection');
 const { queryGetProducts, queryGetCategories } = require('../config/query');

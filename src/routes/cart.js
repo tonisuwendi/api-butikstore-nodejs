@@ -16,4 +16,4 @@ router.post('/', cartController.insertCart);
 router.put('/', cartController.updateCart);
 
 // @ DELETE /cart
-router.delete('/', cartController.removeCart)
+router.delete('/', cartController.removeCart);

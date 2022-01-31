@@ -1,19 +1,20 @@
-const DEVELOPMENT = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+const setting = require('./setting');
+
 let dbsetting;
 
-if (DEVELOPMENT) {
+if (setting.DEVELOPMENT) {
   dbsetting = {
     host: 'localhost',
     user: 'root',
     password: 'root',
     database: 'butikstore',
-  }
+  };
 } else {
   dbsetting = {
     host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'butikstore',
+    user: 'buntomar_someapi_butikstore',
+    password: 'Gl(*N}y-{da(',
+    database: 'buntomar_someapi_butikstore',
   };
 }
 
