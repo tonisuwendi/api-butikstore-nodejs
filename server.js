@@ -11,6 +11,7 @@ const { PATH_URL } = require('./src/config/setting');
 const productsRoutes = require('./src/routes/products');
 const cartRoutes = require('./src/routes/cart');
 const ordersRoutes = require('./src/routes/orders');
+const authRoutes = require('./src/routes/auth');
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,7 @@ app.get(PATH_URL, (req, res) => {
 app.use(`${PATH_URL}products`, productsRoutes);
 app.use(`${PATH_URL}cart`, cartRoutes);
 app.use(`${PATH_URL}orders`, ordersRoutes);
+app.use(`${PATH_URL}auth`, authRoutes);
 
 app.listen(PORT, (err) => {
   if (err) console.log(err);

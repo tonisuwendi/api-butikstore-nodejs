@@ -25,6 +25,27 @@ exports.getProductCategory = async (req, res) => {
   });
 };
 
+exports.searchProducts = async (req, res) => {
+  let productsResult;
+  try {
+    productsResult = await productsHelper.searchProducts(req, res);
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+  const { products, categoryTitle } = productsResult;
+  res.status(200).json({
+    success: true,
+    data: {
+      categoryTitle,
+      count: products.length,
+      products: products ? productSplitImage(products) : [],
+    },
+  });
+};
+
 exports.getAllProducts = async (req, res) => {
   let products;
   try {

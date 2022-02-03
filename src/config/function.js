@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+
 const productSplitImage = (products) => (
   products.map((product) => ({
     ...product,
@@ -34,7 +36,10 @@ const querySorting = (sort) => {
   return query;
 };
 
+const emailValidation = (value) => /^\w+[\+\.\w-]*@([\w-]+\.)*\w+[\w-]*\.([a-z]{2,4}|\d+)$/i.test(value);
+
 module.exports = {
   productSplitImage,
   querySorting,
+  emailValidation,
 };

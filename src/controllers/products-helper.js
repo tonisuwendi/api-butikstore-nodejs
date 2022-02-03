@@ -51,6 +51,27 @@ exports.getProductsByCategory = async (req) => {
   }
 };
 
+exports.searchProducts = async (req) => {
+  const { limit, sort, keyword } = req.query;
+  const sorting = querySorting(sort);
+  const query = queryGetProducts({
+    where: 'title',
+    wherevalue: keyword,
+    like: true,
+    limit,
+    ...sorting,
+  });
+  try {
+    const products = await mysqlQuery(query);
+    return {
+      products,
+      categoryTitle: `SEARCH "${keyword.toUpperCase()}"`,
+    };
+  } catch (err) {
+    throw new Error(errorQuery);
+  }
+};
+
 exports.getAllProducts = async (req) => {
   const { limit, sort } = req.query;
   const sorting = querySorting(sort);
