@@ -1,5 +1,6 @@
 const util = require('util');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const conn = require('../config/connection');
 const func = require('../config/function');
 
@@ -59,4 +60,39 @@ exports.register = async (req, res) => {
       },
     });
   });
+};
+
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+  if (
+    username === undefined || username.trim() === ''
+  || password === undefined || password.trim() === '') {
+    return res.status(200).json({
+      success: false,
+      message: 'Make sure all fields are filled.',
+    });
+  }
+
+  const user = await mysqlQuery(`SELECT * FROM user WHERE username = '${username}'`);
+
+  let passwordValid = false;
+  if (user.length > 0) {
+    passwordValid = await bcrypt.compare(password, user[0].password);
+  }
+
+  if (user.length > 0 && passwordValid) {
+    const token = jwt.sign(user[0].id, process.env.TOKEN_SECRET);
+    res.status(200).json({
+      success: true,
+      data: {
+        email: user[0].email,
+        token,
+      },
+    });
+  } else {
+    res.status(200).json({
+      success: false,
+      message: 'Username or password is wrong!.',
+    });
+  }
 };

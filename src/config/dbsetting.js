@@ -11,10 +11,10 @@ if (setting.DEVELOPMENT) {
   };
 } else {
   dbsetting = {
-    host: 'localhost',
-    user: 'buntomar_someapi_butikstore',
-    password: 'Gl(*N}y-{da(',
-    database: 'buntomar_someapi_butikstore',
+    host: process.env.PRODUCTION_DB_HOST,
+    user: process.env.PRODUCTION_DB_USER,
+    password: process.env.PRODUCTION_DB_PASSWORD,
+    database: process.env.PRODUCTION_DB_DATABASE,
   };
 }
 
