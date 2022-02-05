@@ -43,6 +43,29 @@ exports.getOrder = async (req, res) => {
   }
 };
 
+exports.getOrdersUser = async (req, res) => {
+  const { userId } = req;
+  if (!userId) {
+    return res.status(500).json({
+      success: false,
+      message: errorQuery,
+    });
+  }
+
+  try {
+    const getOrder = await mysqlQuery(`SELECT * FROM orders WHERE user = ${userId}`);
+    res.status(200).json({
+      success: true,
+      data: getOrder,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: errorQuery,
+    });
+  }
+};
+
 exports.insertOrder = async (req, res) => {
   const {
     name, phone, postalCode, address, notes, clientKey,
@@ -74,9 +97,9 @@ exports.insertOrder = async (req, res) => {
 
     const orderNumber = Date.now();
     const data = [
-      [orderNumber, name, phone, postalCode, address, notes, subtotal, new Date()],
+      [req.userId || 0, orderNumber, name, phone, postalCode, address, notes, subtotal, new Date()],
     ];
-    conn.query('INSERT INTO orders (order_number, name, phone, postal_code, address, notes, total, date_order) VALUES ?', [data], (err, insert) => {
+    conn.query('INSERT INTO orders (user, order_number, name, phone, postal_code, address, notes, total, date_order) VALUES ?', [data], (err, insert) => {
       if (err) console.log(err);
       const { insertId } = insert;
       const dataProduct = cartData.map((cartItem) => [cartItem.productId, cartItem.title, cartItem.price, cartItem.qty, cartItem.images.split('^')[0], insertId]);

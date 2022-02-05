@@ -4,7 +4,25 @@ const conn = require('./connection');
 
 const mysqlQuery = util.promisify(conn.query).bind(conn);
 
-const verifyToken = (req, res, next, withNext) => {
+const verifyUser = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const tokenHeader = authHeader && authHeader.split(' ')[1];
+  const tokenBody = req.body.token;
+  if (!tokenHeader && !tokenBody) {
+    next();
+    return;
+  }
+  jwt.verify(tokenHeader || tokenBody, process.env.TOKEN_SECRET, async (err, tokenResult) => {
+    if (err) console.log(err);
+    const member = await mysqlQuery(`SELECT * FROM user WHERE id = ${tokenResult}`);
+    if (member.length > 0) {
+      req.userId = member[0].id;
+    }
+    next();
+  });
+};
+
+const verifyTokenUser = (req, res) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -15,14 +33,9 @@ const verifyToken = (req, res, next, withNext) => {
     try {
       const member = await mysqlQuery(`SELECT * FROM user WHERE id = ${tokenResult}`);
       if (member.length > 0) {
-        req.user = tokenResult;
-        if (withNext) {
-          next();
-        } else {
-          res.status(200).json({
-            success: true,
-          });
-        }
+        res.status(200).json({
+          success: true,
+        });
       } else {
         res.status(401).json({
           success: false,
@@ -37,6 +50,6 @@ const verifyToken = (req, res, next, withNext) => {
 };
 
 module.exports = {
-  verifyTokenUser: (req, res, next) => verifyToken(req, res, next, false),
-  verifyUser: (req, res, next) => verifyToken(req, res, next, true),
+  verifyTokenUser,
+  verifyUser,
 };
