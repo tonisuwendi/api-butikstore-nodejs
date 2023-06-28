@@ -1,0 +1,5 @@
+DATABASE_HOST=localhost
+DATABASE_USER=root
+DATABASE_PASSWORD=root
+DATABASE_NAME=butikstore
+TOKEN_SECRET=jwt_secret_key

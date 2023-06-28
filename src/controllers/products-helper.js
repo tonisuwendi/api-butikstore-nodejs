@@ -40,7 +40,9 @@ exports.getProductsByCategory = async (req) => {
     }
     const limitProducts = [];
     for (let i = 0; i < +limit; i++) {
-      limitProducts.push(productsFilter[i]);
+      if (productsFilter[i]) {
+        limitProducts.push(productsFilter[i]);
+      }
     }
     return {
       products: limitProducts,
